@@ -5,6 +5,8 @@
 | Name | Type | Filename |
 | - | - | - |
 | AWS CloudFront | CIDR | aws-cloudfront-cidr.txt |
+| Cloudflare | CIDR | cloudflare-cidr.txt |
+| Fastly | CIDR | fastly-cidr.txt |
 
 ## Access via CDN (jsDelivr)
 
@@ -13,10 +15,10 @@ Format:
 https://cdn.jsdelivr.net/gh/zaypen/web-service-address-sets@release/<Filename>
 ```
 
-### AWS Cloudfront CIDR
+Example - Cloudflare:
 
 ```
-https://cdn.jsdelivr.net/gh/zaypen/web-service-address-sets@release/aws-cloudfront-cidr.txt
+https://cdn.jsdelivr.net/gh/zaypen/web-service-address-sets@release/cloudflare-cidr.txt
 ```
 
 ## Use cases
@@ -27,17 +29,17 @@ https://cdn.jsdelivr.net/gh/zaypen/web-service-address-sets@release/aws-cloudfro
 rules:
   - RULE-SET,ad,REJECT
   - RULE-SET,gfw,PROXY
-  - RULE-SET,aws-cloudfront,DIRECT
+  - RULE-SET,cloudflare,DIRECT
   - GEOIP,LAN,DIRECT
   - GEOIP,CN,DIRECT
   - MATCH,PROXY
 
 rule-providers:
-  aws-cloudfront:
+  cloudflare:
     type: http
     behavior: ipcidr
-    url: "https://cdn.jsdelivr.net/gh/zaypen/web-service-address-sets@release/aws-cloudfront-cidr.txt"
+    url: "https://cdn.jsdelivr.net/gh/zaypen/web-service-address-sets@release/cloudflare-cidr.txt"
     format: 'text'
-    path: ./ruleset/cloudfront.txt
+    path: ./ruleset/cloudflare.txt
     interval: 86400
 ```
