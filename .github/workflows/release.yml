@@ -1,0 +1,32 @@
+name: Generate Clash rule sets
+on:
+  schedule:
+    - cron: "0 16 * * *"
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "**/README.md"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v3
+        with:
+          ref: release
+      - name: Generate AWS Cloudfront IP CIDR
+        uses: sergeysova/jq-action@v2
+        with: 
+          cmd: |
+            curl -fsSL https://ip-ranges.amazonaws.com/ip-ranges.json \
+            | jq -r '.prefixes[] | select(.service == "CLOUDFRONT") | .ip_prefix' \
+            | sort -n -t. > aws-cloudfront-cidr.txt
+      - name: Release
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Updated at `date -u +%Y-%m-%dT%H:%M:%S%Z`"
+          git tag -a latest -m "Updated at `date -u +%Y-%m-%dT%H:%M:%S%Z`"
+          git push --follow-tags
